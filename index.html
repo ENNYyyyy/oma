@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Valentine's Day Website</title>
+  <!-- Google Fonts for a consistent look -->
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Roboto:wght@400&display=swap" rel="stylesheet">
+  <style>
+    /* Prevent horizontal overflow */
+    html, body {
+      overflow-x: hidden;
+    }
+    /* Global Styles & Reset */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    body {
+      background: #fefefe;
+      color: #333;
+      font-family: 'Roboto', sans-serif;
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      line-height: 1.6;
+    }
+    h1, h2, h3, p {
+      font-family: 'Playfair Display', serif;
+    }
+    h1 {
+      font-size: 2.5rem;
+      margin-bottom: 20px;
+    }
+    h2 {
+      margin-bottom: 10px;
+    }
+    p {
+      margin-bottom: 15px;
+    }
+    /* Container */
+    .container {
+      width: 90%;
+      max-width: 700px;
+      background: #fff;
+      padding: 30px;
+      border-radius: 10px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+      text-align: center;
+      margin-bottom: 30px;
+    }
+    /* Iframe Section */
+    .iframe-container {
+      width: 100%;
+      margin-bottom: 30px;
+    }
+    .iframe-container iframe {
+      width: 100%;
+      height: 600px; /* For larger screens */
+      border: none;
+      border-radius: 8px;
+    }
+    @media (max-width: 600px) {
+      .iframe-container iframe {
+        height: 300px;
+      }
+    }
+    /* Button Styles */
+    .btn {
+      background: #ff4081;
+      color: #fff;
+      border: none;
+      padding: 12px 24px;
+      margin: 10px;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: background 0.3s;
+      font-size: 1rem;
+    }
+    .btn:hover {
+      background: #d81b60;
+    }
+    /* Section Styling */
+    .section {
+      margin: 30px 0;
+      padding: 20px;
+      border-radius: 8px;
+      background: #fafafa;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.08);
+      text-align: center;
+      width: 90%;
+      max-width: 500px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+    /* Love Letter Section */
+    #letter-container {
+      opacity: 0;
+      transition: opacity 1s;
+    }
+    .hidden {
+      display: none;
+    }
+    /* Gallery Section */
+    .gallery {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+      gap: 15px;
+      margin-top: 15px;
+    }
+    .gallery img {
+      width: 100%;
+      border-radius: 8px;
+      object-fit: cover;
+    }
+    /* Playlist Section */
+    .playlist-btn {
+      background: #4CAF50;
+      color: #fff;
+      text-decoration: none;
+      padding: 12px 24px;
+      border-radius: 5px;
+      margin-top: 15px;
+      display: inline-block;
+      transition: background 0.3s;
+    }
+    .playlist-btn:hover {
+      background: #388E3C;
+    }
+    /* Mini-Game Quiz Section */
+    .quiz-container {
+      text-align: left;
+      margin-top: 15px;
+    }
+    .quiz-question {
+      margin-bottom: 15px;
+    }
+    .quiz-options {
+      display: flex;
+      flex-direction: column;
+    }
+    .quiz-options label {
+      background: #e0e0e0;
+      padding: 10px;
+      border-radius: 5px;
+      margin-bottom: 8px;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+    .quiz-options label:hover {
+      background: #d6d6d6;
+    }
+    input[type="radio"] {
+      margin-right: 8px;
+    }
+    .quiz-btn {
+      background: #4CAF50;
+      color: #fff;
+      border: none;
+      padding: 12px 24px;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: background 0.3s;
+      margin-top: 15px;
+      display: block;
+      width: 100%;
+      max-width: 200px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+    .quiz-btn:hover {
+      background: #388E3C;
+    }
+    /* Draggable Image */
+    #draggable-image {
+      position: fixed;
+      bottom: 10px;
+      left: -5vw;  /* On larger screens, partially off-screen */
+      width: 15vw;
+      max-width: 120px;
+      cursor: grab;
+      border: 1px solid #000;
+      transition: left 0.8s ease-out, top 0.8s ease-out;
+      will-change: left, top;
+    }
+    @media (max-width: 600px) {
+      #draggable-image {
+        width: 20vw;
+        max-width: 100px;
+        left: -4.5vw; /* Adjust this value if needed so it remains partially off-screen on mobile */
+      }
+    }
+  </style>
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      // Love Letter Toggle using Video
+      const toggleBtn = document.getElementById("toggle-letter-btn");
+      const letterContainer = document.getElementById("letter-container");
+      toggleBtn.addEventListener("click", () => {
+        if (letterContainer.classList.contains("hidden")) {
+          letterContainer.classList.remove("hidden");
+          setTimeout(() => { letterContainer.style.opacity = 1; }, 50);
+          toggleBtn.innerText = "Hide Letter";
+        } else {
+          letterContainer.style.opacity = 0;
+          setTimeout(() => { letterContainer.classList.add("hidden"); }, 1000);
+          toggleBtn.innerText = "Show Letter";
+        }
+      });
+      
+      // Draggable Image: Auto-return to Original Position
+      const draggableImage = document.getElementById("draggable-image");
+      const initRect = draggableImage.getBoundingClientRect();
+      // Store the initial left and top values (in pixels)
+      draggableImage.dataset.initLeft = initRect.left;
+      draggableImage.dataset.initTop = initRect.top;
+      
+      let isDragging = false;
+      function startDrag(event) {
+        isDragging = true;
+        const shiftX = (event.clientX || event.touches[0].clientX) - draggableImage.getBoundingClientRect().left;
+        const shiftY = (event.clientY || event.touches[0].clientY) - draggableImage.getBoundingClientRect().top;
+        function moveAt(pageX, pageY) {
+          draggableImage.style.left = pageX - shiftX + "px";
+          draggableImage.style.top = pageY - shiftY + "px";
+        }
+        function onMove(event) {
+          if (!isDragging) return;
+          const pageX = event.clientX || event.touches[0].clientX;
+          const pageY = event.clientY || event.touches[0].clientY;
+          moveAt(pageX, pageY);
+        }
+        document.addEventListener("mousemove", onMove);
+        document.addEventListener("touchmove", onMove);
+        function endDrag() {
+          isDragging = false;
+          draggableImage.style.left = draggableImage.dataset.initLeft + "px";
+          draggableImage.style.top = draggableImage.dataset.initTop + "px";
+          document.removeEventListener("mousemove", onMove);
+          document.removeEventListener("touchmove", onMove);
+        }
+        document.addEventListener("mouseup", endDrag, { once: true });
+        document.addEventListener("touchend", endDrag, { once: true });
+      }
+      draggableImage.addEventListener("mousedown", startDrag);
+      draggableImage.addEventListener("touchstart", startDrag);
+      draggableImage.ondragstart = () => false;
+    });
+    
+    // Mini-Game Quiz Functionality
+    function checkAnswers() {
+      const answers = {
+        q1: "your smell",
+        q2: "when you randomly show you care",
+        q3: "the day i met you...very funny and lovely day",
+        q4: "conversations",
+        q5: "your smile"
+      };
+      const questionsText = {
+        q1: "Which quality of yours do I admire the most?",
+        q2: "What is one small habit of yours that always brightens my day?",
+        q3: "What is one of my favorite memories of us?",
+        q4: "What is one thing you look forward to the most when we finally reunite?",
+        q5: "What is my favorite thing about you?"
+      };
+      let score = 0;
+      let wrongQuestions = [];
+      for (let key in answers) {
+        const selected = document.querySelector(`input[name=${key}]:checked`);
+        if (selected && selected.value === answers[key]) {
+          score++;
+        } else {
+          wrongQuestions.push(questionsText[key]);
+        }
+      }
+      let message = `You got ${score} out of 5 correct!`;
+      if (wrongQuestions.length) {
+        message += "\nYou got these questions wrong:\n- " + wrongQuestions.join("\n- ");
+      }
+      alert(message);
+    }
+  </script>
+</head>
+<body>
+  <div class="container">
+    <h1>Omaa.</h1>
+    
+    <!-- Iframe Section -->
+    <div class="iframe-container">
+      <iframe src="https://bandcamp.com/EmbeddedPlayer/album=1257160096/size=large/bgcol=333333/linkcol=ffffff/tracklist=false/track=965740023/transparent=true/" seamless allow="autoplay"></iframe>
+      <p>Background song</p>
+    </div>
+    
+    <!-- Love Letter Section -->
+    <div class="section">
+      <h2>A Letter for the lady</h2>
+      <button class="btn" id="toggle-letter-btn">Show Letter</button>
+      <div id="letter-container" class="hidden" style="opacity:0;">
+        <!-- Replace with your video file (oma.mp4) -->
+        <video id="letter-video" src="./oma.mp4" autoplay loop muted playsinline style="width:100%; max-width:300px; border-radius:10px;"></video>
+      </div>
+    </div>
+    
+    <!-- Music Player Section -->
+    <div class="section">
+      <h2>Your Playlist</h2>
+      <p>Consist of your favorite songs and some other beautiful songs, listen to it ❤️</p>
+      <a id="music-player" href="https://open.spotify.com/playlist/5nlmRWGl6QU1Xh3TzCaz1x?si=a5443ab0412d4c2e" target="_blank" class="playlist-btn">Spotify Playlist</a>
+    </div>
+    
+    <!-- Mini-Game Quiz Section -->
+    <div class="section" id="mini-game">
+      <h2>Mini-Game Quiz</h2>
+      <p>Answer the following questions about our long-distance relationship:</p>
+      <form class="quiz-container" onsubmit="event.preventDefault(); checkAnswers();">
+        <!-- Question 1 -->
+        <div class="quiz-question">
+          <label>Which quality of yours do I admire the most?</label>
+          <div class="quiz-options">
+            <label><input type="radio" name="q1" value="your smell"> You are peaceful</label>
+            <label><input type="radio" name="q1" value="funny"> You are funny</label>
+            <label><input type="radio" name="q1" value="adventurous"> You are adventurous</label>
+          </div>
+        </div>
+        <!-- Question 2 -->
+        <div class="quiz-question">
+          <label>What is one small habit of yours that always brightens my day?</label>
+          <div class="quiz-options">
+            <label><input type="radio" name="q2" value="when you randomly show you care"> When you randomly show you care</label>
+            <label><input type="radio" name="q2" value="sending memes"> Sending memes</label>
+            <label><input type="radio" name="q2" value="leaving me alone"> Leaving me alone</label>
+          </div>
+        </div>
+        <!-- Question 3 -->
+        <div class="quiz-question">
+          <label>What is one of my favorite memories of us?</label>
+          <div class="quiz-options">
+            <label><input type="radio" name="q3" value="the day i met you...very funny and lovely day"> The day I met you...very funny and lovely day</label>
+            <label><input type="radio" name="q3" value="dinner date"> A dinner date</label>
+            <label><input type="radio" name="q3" value="surprise trip"> A surprise trip</label>
+          </div>
+        </div>
+        <!-- Question 4 -->
+        <div class="quiz-question">
+          <label>What is one thing you look forward to the most when we finally reunite?</label>
+          <div class="quiz-options">
+            <label><input type="radio" name="q4" value="conversations"> Conversations</label>
+            <label><input type="radio" name="q4" value="long walks"> Long walks</label>
+            <label><input type="radio" name="q4" value="surprise visits"> Surprise visits</label>
+          </div>
+        </div>
+        <!-- Question 5 -->
+        <div class="quiz-question">
+          <label>What is my favorite thing about you?</label>
+          <div class="quiz-options">
+            <label><input type="radio" name="q5" value="your smile"> Your smile</label>
+            <label><input type="radio" name="q5" value="your eyes"> Your eyes</label>
+            <label><input type="radio" name="q5" value="your kindness"> Your kindness</label>
+          </div>
+        </div>
+        <button class="quiz-btn" type="submit">Check Answers</button>
+      </form>
+    </div>
+  </div>
+  
+  <!-- Draggable Image (starts off-screen and auto-returns) -->
+  <img id="draggable-image" src="./oma.jpg" alt="Draggable Image">
+  
+  <script src="script.js"></script>
+</body>
+</html>
